@@ -1,2 +1,2 @@
 # Rytm
-Aplicativo voltado para foco e gerencimento de tempo baseado em missões
+Aplicativo voltado para foco e gerenciamento de tempo baseado em missões
