@@ -5,8 +5,15 @@ import SyncTasks from "../components/syncTasks.jsx";
 export const AppContext = createContext(null);
 
 export function AppContextProvider({ children }) {
-    const [tasks, setTasks] = useState([]);
+    const [tasks, _setTasks] = useState([]);
 
+    const setTasks = (updater) => {
+        _setTasks((prev) => {
+            const next = typeof updater === "function" ? updater(prev) : updater;
+
+            return [...next].sort((a, b) => a.id - b.id);
+        });
+    };
     useEffect(() => {
         api.get("/tasks")
             .then(res => {

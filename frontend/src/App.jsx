@@ -20,11 +20,6 @@ function AppContent() {
               <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Rytm
               </h1>
-              {/* {stats.total > 0 && (
-                <div className="text-xs text-white/60">
-                  {stats.completed}/{stats.total} tarefas • {stats.completionPercentage}% concluído
-                </div>
-              )} */}
             </div>
           </div>
 
@@ -36,15 +31,6 @@ function AppContent() {
           </button>
         </div>
       </header>
-
-      {/* Error Message */}
-      {/* {error && (
-        <div className="max-w-7xl mx-auto px-6 pt-4">
-          <div className="bg-red-500/20 border border-red-500/50 rounded-xl p-4 text-red-400 text-sm">
-            {error}
-          </div>
-        </div>
-      )} */}
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8">

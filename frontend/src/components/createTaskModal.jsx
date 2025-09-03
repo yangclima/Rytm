@@ -1,8 +1,10 @@
 import { useState, useContext } from "react";
 import { AppContext } from "../contexts/appContext";
+import api from "../services/api.js"
 
 function CreateTaskModal({ onClose }) {
     const { setTasks } = useContext(AppContext);
+    const [_, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         title: '',
         content: '',
@@ -10,17 +12,14 @@ function CreateTaskModal({ onClose }) {
         minutes: 25
     });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
         if (!formData.title.trim()) return;
 
-        const totalTime = (formData.hours * 60 * 60) + (formData.minutes * 60);
-
+        const totalTime = ((formData.hours * 60) + formData.minutes) * 60;
         if (totalTime <= 0) return;
 
-        const newTask = {
-            id: Date.now(), // Simple ID generation
+        const payload = {
             title: formData.title.trim(),
             content: formData.content.trim(),
             totalTime: totalTime,
@@ -28,9 +27,21 @@ function CreateTaskModal({ onClose }) {
             isDone: false
         };
 
-        setTasks(prev => [...prev, newTask]);
-        onClose();
+        setIsSubmitting(true);
+        try {
+            let createdTask = await api.post('tasks', payload)
+            createdTask = createdTask.data
+            console.log(createdTask)
+            setTasks(prev => [...prev, createdTask]);
+            onClose();
+        } catch (err) {
+            console.error(err);
+            alert('Erro ao criar tarefa. Verifique o backend / CORS / URL.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
+
 
     const handleInputChange = (field, value) => {
         setFormData(prev => ({
