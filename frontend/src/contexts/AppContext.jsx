@@ -1,15 +1,23 @@
-import { createContext, useState } from "react";
-
-const initialTasks = [
-    { title: "Task 1", totalTime: 600, remainingTime: 3, isDone: false, id: 1 },
-    { title: "Task 2", totalTime: 120, remainingTime: 5, isDone: false, id: 2 },
-    { title: "Task 3", totalTime: 150, remainingTime: 8, isDone: false, id: 3}
-];
+import { createContext, useState, useEffect } from "react";
+import api from "../../services/api.js";
 
 export const AppContext = createContext(null);
 
 function AppContextProvider({ children }) {
-    const [tasks, setTasks] = useState(initialTasks);
+    const [tasks, setTasks] = useState([]);
+    
+    useEffect(() => {
+        api.get("/tasks")
+          .then(res => {
+            console.log(res.data)
+            setTasks(res.data)
+          })
+          .catch(err => {
+            console.error("Erro ao carregar tasks:", err);
+          })
+    }, [])
+
+
     const [activeTask, _setActiveTask] = useState(0);
 
     const setActiveTask = (newActiveTask) => {

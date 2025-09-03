@@ -6,6 +6,8 @@ function Clock() {
   const { tasks, setTasks, activeTask, setActiveTask } = useContext(AppContext);
   const task = tasks[activeTask];
 
+  if (!task) return <div>Carregando...</div>;
+
   const [running, setRunning] = useState(false);
 
   useEffect(() => {
