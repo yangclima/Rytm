@@ -1,7 +1,7 @@
 import Clock from "./components/clock";
 import Tasks from "./components/tasks";
 import CreateTaskModal from "./components/createTaskModal";
-import { AppContextProvider } from "./contexts/appContext.jsx";
+import AppContextProvider from "./contexts/appContext/provider";
 import { useState } from "react";
 
 function AppContent() {

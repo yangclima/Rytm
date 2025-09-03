@@ -1,5 +1,5 @@
 import { useEffect, useContext, useState } from "react";
-import { AppContext } from "../contexts/appContext.jsx";
+import { AppContext } from "../contexts/appContext/context.js";
 import formatTime from "../utils/formatTime.js";
 
 function Clock() {

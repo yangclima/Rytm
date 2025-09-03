@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { AppContext } from "../contexts/appContext";
+import { AppContext } from "../contexts/appContext/context.js";
 import api from "../services/api.js"
 
 function CreateTaskModal({ onClose }) {

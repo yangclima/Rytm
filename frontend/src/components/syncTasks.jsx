@@ -1,9 +1,9 @@
 import { useEffect, useContext, useRef } from "react";
-import { AppContext } from "../contexts/appContext";
+import { AppContext } from "../contexts/appContext/context";
 import api from "../services/api";
 
 function SyncTasks() {
-  const { tasks, setTasks } = useContext(AppContext);
+  const { tasks } = useContext(AppContext);
   const tasksRef = useRef(tasks);
 
   useEffect(() => {

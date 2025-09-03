@@ -1,9 +1,22 @@
-import { useContext } from "react";
-import { AppContext } from "../contexts/appContext";
+import { useContext, useState } from "react";
+import { AppContext } from "../contexts/appContext/context";
 import formatTime from "../utils/formatTime";
 
 function Tasks() {
-    const { tasks, setActiveTask, activeTask } = useContext(AppContext);
+    const { tasks, setActiveTask, activeTask, deleteTask } = useContext(AppContext);
+    const [taskToDelete, setTaskToDelete] = useState(null);
+
+    const handleDeleteConfirm = async () => {
+        if (taskToDelete) {
+            try {
+                await deleteTask(taskToDelete.id);
+                setTaskToDelete(null);
+            } catch (error) {
+                alert("Erro ao deletar tarefa");
+                throw error
+            }
+        }
+    };
 
     if (tasks.length === 0) {
         return (
@@ -38,9 +51,8 @@ function Tasks() {
                     return (
                         <div
                             key={task.id}
-                            onClick={() => setActiveTask(index)}
                             className={`
-                relative p-3 sm:p-4 rounded-xl sm:rounded-2xl border backdrop-blur-xl cursor-pointer transition-all duration-300 group
+                relative p-3 sm:p-4 rounded-xl sm:rounded-2xl border backdrop-blur-xl transition-all duration-300 group
                 ${isActive
                                     ? 'bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-purple-500/50 shadow-lg shadow-purple-500/20'
                                     : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20'
@@ -53,7 +65,24 @@ function Tasks() {
                                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-purple-400 to-pink-400 rounded-r-full"></div>
                             )}
 
-                            <div className="flex items-start gap-3">
+                            {/* Delete Button */}
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setTaskToDelete(task);
+                                }}
+                                className="absolute top-2 right-2 w-6 h-6 bg-red-500/20 hover:bg-red-500/40 border border-red-500/30 rounded-lg flex items-center justify-center text-red-400 hover:text-red-300 transition-all duration-200 opacity-0 group-hover:opacity-100"
+                                title="Deletar tarefa"
+                            >
+                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+
+                            <div
+                                className="flex items-start gap-3 cursor-pointer"
+                                onClick={() => setActiveTask(index)}
+                            >
                                 {/* Status Icon */}
                                 <div className={`
                   w-6 h-6 rounded-full flex items-center justify-center text-sm flex-shrink-0 mt-0.5
@@ -150,6 +179,32 @@ function Tasks() {
                     <div className="text-xs text-white/60">Estudado</div>
                 </div>
             </div>
+
+            {/* Delete Confirmation Modal */}
+            {taskToDelete && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                    <div className="bg-slate-800/95 backdrop-blur-xl border border-white/10 rounded-2xl p-6 w-full max-w-sm shadow-2xl">
+                        <h3 className="text-lg font-bold text-white mb-2">Deletar Tarefa</h3>
+                        <p className="text-white/70 mb-4">
+                            Tem certeza que deseja deletar "{taskToDelete.title}"? Esta ação não pode ser desfeita.
+                        </p>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setTaskToDelete(null)}
+                                className="flex-1 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-white transition-all duration-200"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={handleDeleteConfirm}
+                                className="flex-1 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 rounded-xl text-red-400 transition-all duration-200"
+                            >
+                                Deletar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
