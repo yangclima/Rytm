@@ -10,7 +10,7 @@ function AppContextProvider({ children }) {
     useEffect(() => {
         api.get("/tasks")
           .then(res => {
-            setTasks(res.data)
+            setTasks(res.data.sort((a, b) => a.id - b.id))
           })
           .catch(err => {
             console.error("Erro ao carregar tasks:", err);

@@ -3,7 +3,7 @@ import { AppContext } from "../contexts/appContext";
 import api from "../services/api";
 
 function SyncTasks() {
-  const { tasks } = useContext(AppContext);
+  const { tasks, setTasks } = useContext(AppContext);
   const tasksRef = useRef(tasks);
 
   useEffect(() => {
@@ -18,6 +18,9 @@ function SyncTasks() {
         .then(() => console.log("✅ Tasks sincronizadas"))
         .catch(err => console.error("Erro ao sincronizar tasks:", err));
     }, 10000);
+
+
+
 
     return () => clearInterval(interval);
   }, []); // intervalo criado só uma vez

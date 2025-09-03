@@ -8,7 +8,7 @@ function Tasks(){
 
     return <div>{
         tasks.map((task, index) => (
-            <div key={task.id} onClick={() => setActiveTask(index)}>
+            <div key={task.id} onClick={() => setActiveTask(index)} title={task.content}>
                 <div>{task.isDone ? "✅" : "❌"}</div>
                 <h3>{task.title}</h3>
                 <h4>{formatTime(task.totalTime) + "/" + formatTime(task.remainingTime)}</h4>
