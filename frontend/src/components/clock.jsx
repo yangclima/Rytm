@@ -1,5 +1,5 @@
 import { useEffect, useContext, useState } from "react";
-import { AppContext } from "../contexts/appContext";
+import { AppContext } from "../contexts/appContext.jsx";
 import formatTime from "../utils/formatTime.js";
 
 function Clock() {
@@ -89,16 +89,18 @@ function Clock() {
   };
 
   return (
-    <>
-      <div>{task.title}</div>
-      <div>{formatTime(task.remainingTime)}</div>
-      <div>
-        <button onClick={handle5More}>+5</button>
-        <button onClick={handlePlay}>{running ? "⏸️" : "▶️"}</button>
-        <button onClick={handleSkip}>⏭️</button>
-        <button onClick={handleReplay}>🔁</button>
+    <div className={"flex items-center justify-center h-screen"}>
+      <div className={"text-center w-96"}>
+        <div className={'text-2xl w-72 mx-auto'}>{task.title}</div>
+        <div className={"text-6xl p-4"}>{formatTime(task.remainingTime)}</div>
+        <div className={'grid grid-cols-4 gap-2 w-48 mx-auto text-2xl'}>
+          <button onClick={handle5More}>+5</button>
+          <button onClick={handlePlay}>{running ? "⏸️" : "▶️"}</button>
+          <button onClick={handleSkip}>⏭️</button>
+          <button onClick={handleReplay}>🔁</button>
+        </div>
       </div>
-    </>
+    </div>
   );
 }
 

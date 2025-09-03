@@ -1,8 +1,8 @@
 import Clock from "./components/clock";
 import Tasks from "./components/tasks";
-import AppContextProvider from "./contexts/AppContext";
+import { AppContextProvider } from "./contexts/appContext.jsx";
 
-function App(){
+function App() {
   return <>
     <AppContextProvider>
       <Clock></Clock>

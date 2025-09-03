@@ -4,17 +4,17 @@ import SyncTasks from "../components/syncTasks.jsx";
 
 export const AppContext = createContext(null);
 
-function AppContextProvider({ children }) {
+export function AppContextProvider({ children }) {
     const [tasks, setTasks] = useState([]);
-    
+
     useEffect(() => {
         api.get("/tasks")
-          .then(res => {
-            setTasks(res.data.sort((a, b) => a.id - b.id))
-          })
-          .catch(err => {
-            console.error("Erro ao carregar tasks:", err);
-          })
+            .then(res => {
+                setTasks(res.data.sort((a, b) => a.id - b.id))
+            })
+            .catch(err => {
+                console.error("Erro ao carregar tasks:", err);
+            })
     }, [])
 
 
@@ -32,9 +32,9 @@ function AppContextProvider({ children }) {
     return (
         <AppContext value={{ tasks, setTasks, activeTask, setActiveTask }}>
             <SyncTasks></SyncTasks>
-            {children}
+            <div className={"grid grid-cols-2 gap-4"}>
+                {children}
+            </div>
         </AppContext>
     );
 }
-
-export default AppContextProvider;
