@@ -9,7 +9,6 @@ export async function getTasks() {
 
 export async function updateTasks(tasksToUpdate) {
     await tasksToUpdate.map(async (task) => {
-        console.log(task)
         await prisma.task.update({
             where: {id: task.id},
             data: {
