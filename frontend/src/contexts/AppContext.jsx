@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
-import api from "../../services/api.js";
+import api from "../services/api.js";
+import SyncTasks from "../components/syncTasks.jsx";
 
 export const AppContext = createContext(null);
 
@@ -9,7 +10,6 @@ function AppContextProvider({ children }) {
     useEffect(() => {
         api.get("/tasks")
           .then(res => {
-            console.log(res.data)
             setTasks(res.data)
           })
           .catch(err => {
@@ -31,6 +31,7 @@ function AppContextProvider({ children }) {
 
     return (
         <AppContext value={{ tasks, setTasks, activeTask, setActiveTask }}>
+            <SyncTasks></SyncTasks>
             {children}
         </AppContext>
     );

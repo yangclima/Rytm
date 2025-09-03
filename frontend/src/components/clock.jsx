@@ -4,9 +4,8 @@ import formatTime from "../utils/formatTime.js";
 
 function Clock() {
   const { tasks, setTasks, activeTask, setActiveTask } = useContext(AppContext);
-  const task = tasks[activeTask];
+  const task = tasks[activeTask] || { remainingTime: 0, totalTime: 0, title: "", isDone: false };
 
-  if (!task) return <div>Carregando...</div>;
 
   const [running, setRunning] = useState(false);
 
