@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 
-import { getTasks, updateTasks, createTask } from "./infra/db.js";
+import { getTasks, updateTasks, createTask, deleteTask } from "./infra/db.js";
 
 const app = express();
 
@@ -41,6 +41,17 @@ app.post("/tasks", async (req, res) => {
         return res.status(500).json({ message: "Internal server error"})
     }
 })
+
+app.delete("/tasks", async (req, res) => {
+    try {
+        const {taskId} = req.body;
+        const deletedTask= await deleteTask(taskId);
+        return res.status(200).json(deletedTask)
+    } catch (err) {
+        return res.status(500).json({ message: "Internal server error"})
+    }
+})
+
 
 const PORT = 3030
 app.listen(PORT, () => {

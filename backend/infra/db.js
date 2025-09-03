@@ -9,7 +9,7 @@ export async function getTasks() {
 
 export async function updateTasks(tasksToUpdate) {
     tasksToUpdate.map(async (task) => {
-        await prisma.task.update({
+        await prisma.task.updateMany({
             where: {id: task.id},
             data: {
                 remainingTime: task.remainingTime,
@@ -25,4 +25,12 @@ export async function createTask(taskContent) {
     })
 
     return newTask;
+}
+
+export async function deleteTask(taskId) {
+    const deletedTask = await prisma.task.delete({
+        where: {id: taskId}
+    })
+
+    return deletedTask;
 }
