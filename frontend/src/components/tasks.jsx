@@ -1,29 +1,157 @@
 import { useContext } from "react";
-
 import { AppContext } from "../contexts/appContext";
 import formatTime from "../utils/formatTime";
 
 function Tasks() {
-    const { tasks, setActiveTask } = useContext(AppContext)
+    const { tasks, setActiveTask, activeTask } = useContext(AppContext);
+
+    if (tasks.length === 0) {
+        return (
+            <div className="w-full max-w-md">
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 text-center">
+                    <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <span className="text-2xl">📝</span>
+                    </div>
+                    <h3 className="text-lg font-semibold text-white/90 mb-2">Nenhuma tarefa</h3>
+                    <p className="text-sm text-white/60">Crie uma nova tarefa para começar a estudar</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
-        <div className={"flex items-center justify-center h-screen"}>
-            <div>{
-                tasks.map((task, index) => (
-                    <div
-                        key={task.id}
-                        onClick={() => setActiveTask(index)}
-                        title={task.content}
-                        className={"bg-amber-500"}
-                    >
-                        <div>{task.isDone ? "✅" : "❌"}</div>
-                        <h3>{task.title}</h3>
-                        <h4>{formatTime(task.totalTime) + "/" + formatTime(task.remainingTime)}</h4>
+        <div className="w-full max-w-sm lg:max-w-md">
+            {/* Header */}
+            <div className="mb-4 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">Suas Tarefas</h2>
+                <div className="text-sm text-white/60">
+                    {tasks.filter(t => t.isDone).length} de {tasks.length} concluídas
+                </div>
+            </div>
+
+            {/* Tasks List */}
+            <div className="space-y-3 max-h-[50vh] lg:max-h-[60vh] overflow-y-auto custom-scrollbar">
+                {tasks.map((task, index) => {
+                    const progress = task.totalTime > 0 ? ((task.totalTime - task.remainingTime) / task.totalTime) * 100 : 0;
+                    const isActive = index === activeTask;
+
+                    return (
+                        <div
+                            key={task.id}
+                            onClick={() => setActiveTask(index)}
+                            className={`
+                relative p-3 sm:p-4 rounded-xl sm:rounded-2xl border backdrop-blur-xl cursor-pointer transition-all duration-300 group
+                ${isActive
+                                    ? 'bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-purple-500/50 shadow-lg shadow-purple-500/20'
+                                    : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20'
+                                }
+                ${task.isDone ? 'opacity-75' : ''}
+              `}
+                        >
+                            {/* Active Indicator */}
+                            {isActive && (
+                                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-purple-400 to-pink-400 rounded-r-full"></div>
+                            )}
+
+                            <div className="flex items-start gap-3">
+                                {/* Status Icon */}
+                                <div className={`
+                  w-6 h-6 rounded-full flex items-center justify-center text-sm flex-shrink-0 mt-0.5
+                  ${task.isDone
+                                        ? 'bg-green-500/20 border border-green-500/50 text-green-400'
+                                        : 'bg-white/10 border border-white/20 text-white/60'
+                                    }
+                `}>
+                                    {task.isDone ? '✓' : index + 1}
+                                </div>
+
+                                {/* Task Content */}
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <h3 className={`
+                      font-medium leading-tight text-sm sm:text-base
+                      ${task.isDone
+                                                ? 'text-white/60 line-through'
+                                                : isActive
+                                                    ? 'text-white'
+                                                    : 'text-white/90'
+                                            }
+                    `}>
+                                            {task.title}
+                                        </h3>
+
+                                        {/* Time Badge */}
+                                        <div className="flex items-center gap-1 text-xs">
+                                            <span className={`
+                        px-2 py-1 rounded-full
+                        ${task.isDone
+                                                    ? 'bg-green-500/20 text-green-400'
+                                                    : 'bg-white/10 text-white/80'
+                                                }
+                      `}>
+                                                {formatTime(task.remainingTime)}
+                                            </span>
+                                            <span className="text-white/40">/</span>
+                                            <span className="text-white/60">
+                                                {formatTime(task.totalTime)}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* Content Preview */}
+                                    {task.content && (
+                                        <p className="text-xs sm:text-sm text-white/60 mb-3 line-clamp-2">
+                                            {task.content}
+                                        </p>
+                                    )}
+
+                                    {/* Progress Bar */}
+                                    <div className="relative">
+                                        <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+                                            <div
+                                                className={`
+                          h-full rounded-full transition-all duration-500 ease-out
+                          ${task.isDone
+                                                        ? 'bg-gradient-to-r from-green-400 to-green-500'
+                                                        : 'bg-gradient-to-r from-purple-400 to-pink-400'
+                                                    }
+                        `}
+                                                style={{ width: `${progress}%` }}
+                                            ></div>
+                                        </div>
+                                        <div className="text-xs text-white/50 mt-1 text-right">
+                                            {Math.round(progress)}% concluído
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Active Task Glow */}
+                            {isActive && (
+                                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500/10 to-pink-500/10 pointer-events-none"></div>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/* Summary Stats */}
+            <div className="mt-4 sm:mt-6 grid grid-cols-2 gap-3">
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-3 text-center">
+                    <div className="text-base sm:text-lg font-bold text-purple-400">
+                        {tasks.filter(t => t.isDone).length}
                     </div>
-                ))
-            }</div>
+                    <div className="text-xs text-white/60">Concluídas</div>
+                </div>
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-3 text-center">
+                    <div className="text-base sm:text-lg font-bold text-pink-400">
+                        {formatTime(tasks.reduce((acc, task) => acc + (task.totalTime - task.remainingTime), 0))}
+                    </div>
+                    <div className="text-xs text-white/60">Estudado</div>
+                </div>
+            </div>
         </div>
-    )
+    );
 }
 
 export default Tasks;

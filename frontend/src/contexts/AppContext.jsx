@@ -17,7 +17,6 @@ export function AppContextProvider({ children }) {
             })
     }, [])
 
-
     const [activeTask, _setActiveTask] = useState(0);
 
     const setActiveTask = (newActiveTask) => {
@@ -30,11 +29,9 @@ export function AppContextProvider({ children }) {
     };
 
     return (
-        <AppContext value={{ tasks, setTasks, activeTask, setActiveTask }}>
-            <SyncTasks></SyncTasks>
-            <div className={"grid grid-cols-2 gap-4"}>
-                {children}
-            </div>
-        </AppContext>
+        <AppContext.Provider value={{ tasks, setTasks, activeTask, setActiveTask }} className="h-full bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
+            <SyncTasks />
+            {children}
+        </AppContext.Provider>
     );
 }
