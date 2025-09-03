@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 
-import { getTasks, updateTasks } from "./infra/db.js";
+import { getTasks, updateTasks, createTask } from "./infra/db.js";
 
 const app = express();
 
@@ -13,8 +13,12 @@ app.use(cors({
 app.use(express.json());
 
 app.get("/tasks", async (req, res) => {
-    const tasks = await getTasks();
-    return res.status(200).json(tasks)
+    try {
+        const tasks = await getTasks();
+        return res.status(200).json(tasks)
+    } catch (err) {
+        return res.status(500).json({ message: "Internal server error"})
+    }
 })
 
 app.put("/tasks", async (req, res) => {
@@ -25,6 +29,16 @@ app.put("/tasks", async (req, res) => {
         return res.status(500).json({ message: "Internal server error"})
     } finally {
         return res.status(200).json({ message: "Resource updated successfully"})
+    }
+})
+
+app.post("/tasks", async (req, res) => {
+    try {
+        const taskContent = req.body;
+        const newTask = await createTask(taskContent);
+        return res.status(201).json(newTask)
+    } catch (err) {
+        return res.status(500).json({ message: "Internal server error"})
     }
 })
 

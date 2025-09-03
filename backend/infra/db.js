@@ -8,7 +8,7 @@ export async function getTasks() {
 }
 
 export async function updateTasks(tasksToUpdate) {
-    await tasksToUpdate.map(async (task) => {
+    tasksToUpdate.map(async (task) => {
         await prisma.task.update({
             where: {id: task.id},
             data: {
@@ -17,4 +17,12 @@ export async function updateTasks(tasksToUpdate) {
             }
         })
     })
+}
+
+export async function createTask(taskContent) {
+    const newTask = await prisma.task.create({
+        data: taskContent
+    })
+
+    return newTask;
 }
