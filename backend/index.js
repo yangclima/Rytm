@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 
+import { getTasks } from "./infra/db.js";
+
 const app = express();
 
 app.use(cors({
@@ -10,8 +12,9 @@ app.use(cors({
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
-    return res.status(200).json({success: true})
+app.get("/tasks", async (req, res) => {
+    const tasks = await getTasks();
+    return res.status(200).json(tasks)
 })
 
 const PORT = 3030
